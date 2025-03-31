@@ -60,7 +60,7 @@ def tts_backend(text,output_path,voice_type="BV007_streaming"):
     }
     try:
         resp = requests.post(api_url, json.dumps(request_json), headers=header)
-        # print(f"resp body: \n{resp.json()}")
+        print(f"resp body: \n{resp.json()}")
         if "data" in resp.json():
             data = resp.json()["data"]
             file_to_save = open(output_path, "wb")
