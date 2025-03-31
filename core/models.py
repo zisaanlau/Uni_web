@@ -14,6 +14,7 @@ class UserFiles(db.Model):
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
+    sso_id = db.Column(db.String(200))
     name = db.Column(db.String(254))
     username = db.Column(db.String(254))
     password_hash = db.Column(db.String(254))
