@@ -45,6 +45,7 @@ def create_payment_details(payload):
         status = 0,
         type = 0,
         amount = payload['amount'],
+        credits = 0,
         currency = payload['currency'],
         payment_email = payload['payment_email'],
         dispute = 0,

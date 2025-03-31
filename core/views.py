@@ -1350,15 +1350,18 @@ def checkout_webhook():
             checkout_session = stripe.checkout.Session.list_line_items(payload['id'])
 
             if checkout_session is not None:
-                unit_amount = checkout_session['data'][0]['price']['unit_amount']
-                payment_details.product_type = unit_amount
+                print(checkout_session['data'][0])
+                lookup_key = checkout_session['data'][0]['price']['lookup_key']
+                payment_details.product_type = lookup_key
                 user = User.query.filter_by(id = payment_details.user_id).first()
-                if unit_amount == 20000:
-                    user.credit += 2000000
-                elif unit_amount == 50000:
-                    user.credit += 6000000
+                if lookup_key == 'starter':
+                    user.credit += 100000
+                    payment_details.credits += 100000
+                elif lookup_key == 'professional':
+                    user.credit += 500000
+                    payment_details.credits += 500000
                 else:
-                    user.credit += unit_amount
+                    pass
 
         elif event.type == 'charge.updated':
             payment_charge_details = PaymentChargeDetails.query.filter_by(external_id = payload['id']).first()
@@ -1393,15 +1396,16 @@ def checkout_webhook():
 @app.route('/api/get_bill', methods=["GET", 'POST'])
 def get_bill():
     token = request.headers.get('token')
-    data = BillQueue.query.filter_by(username=token).all()
+    user = User.query.filter_by(username=token).first()
+    data = PaymentDetails.query.filter_by(user_id=user.id).all()
     res = []
     total = len(data)
     for item in data:
         obj = {
             'id': item.id,
-            'create_time': item.create_time,
-            'price': item.price,
-            'add_credit': item.add_credit,
+            'create_time': str(item.created_at),
+            'price': item.amount,
+            'add_credit': item.credits,
         }
         res.append(obj)
     return json.dumps({

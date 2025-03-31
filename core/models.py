@@ -1,6 +1,5 @@
 import uuid
 from datetime import datetime
-from email.policy import default
 
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -76,8 +75,9 @@ class PaymentDetails(db.Model):
     payment_intent_id = db.Column(db.String(200), default = '')
     status = db.Column(db.Integer)
     type = db.Column(db.Integer)
-    product_type = db.Column(db.Integer)
+    product_type = db.Column(db.String(20), default = '')
     amount = db.Column(db.Integer)
+    credits = db.Column(db.Integer)
     currency = db.Column(db.String(3))
     payment_email = db.Column(db.String(20))
     name = db.Column(db.String(20), default = '')
