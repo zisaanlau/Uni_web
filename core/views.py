@@ -1105,7 +1105,7 @@ def set_chat_audio():
     mp3_files = []
 
     cmd = """
-    ffmpeg  """
+    /usr/local/bin/ffmpeg/bin/ffmpeg  """
     for i in range(len(res)):
         output_path = os.path.join(dir_path, str(i) + '.wav')
         mp3_files.append(output_path)

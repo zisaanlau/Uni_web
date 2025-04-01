@@ -1,5 +1,3 @@
-import json
-
 from flask import jsonify
 
 from core.models import PaymentIntentDetails, PaymentDetails, PaymentWebhook, PaymentChargeDetails, User
@@ -12,7 +10,7 @@ def validate_stripe_webhook(request):
         event = stripe.Webhook.construct_event(
             # payload, sig_header, 'whsec_XKTIQguMAHMrVtdh65FP0hshYwefIHYh'
             # 上面是生产，下面是测试
-            payload, sig_header, 'whsec_1293fb67ba5d8d21a167467b4fb23955ee49acec78025b0531826a4b945f35ca'
+            payload, sig_header, 'whsec_tyLV0vhY52l6zJUG5VI6PCHlSfDOIGew'
         )
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
@@ -34,7 +32,7 @@ def create_webhook_record(event):
         external_id = payload['id'],
         name = event.type,
         amount = amount,
-        client_secret = payload["client_secret"] if "client_secret" in payload and payload["client_secret"] is not None else ""
+        client_secret = payload['client_secret'] if 'client_secret' in payload and payload['client_secret'] is not None else ''
     )
     return new_webhook
 
@@ -56,11 +54,11 @@ def create_payment_details(payload):
 def create_payment_intent(payload):
     payment_intent_details = PaymentIntentDetails(
         external_id = payload['id'],
-        client_secret = payload["client_secret"] if "client_secret" in payload and payload["client_secret"] is not None else "",
-        latest_charge = payload['latest_charge'],
+        client_secret = payload['client_secret'] if 'client_secret' in payload and payload['client_secret'] is not None else '',
+        latest_charge = payload['latest_charge'] if 'latest_charge' in payload and payload['latest_charge'] is not None else '',
         type = 0,
-        status = 1 if "status" in payload and payload["status"] == 'succeeded' else 0,
-        amount_received = payload["amount_received"] if "amount_received" in payload else 0,
+        status = 1 if 'status' in payload and payload['status'] == 'succeeded' else 0,
+        amount_received = payload['amount_received'] if 'amount_received' in payload else 0,
         amount = payload['amount']
     )
     return payment_intent_details
