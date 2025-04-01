@@ -4,7 +4,7 @@ from itsdangerous import BadSignature, SignatureExpired
 from sqlalchemy.exc import SQLAlchemyError
 
 from core import app, db, executor
-from core.models import UserFiles, User, ProcessQueue, BillQueue, AudioQueue, UserVoiceCloneQueue, WxPublicMsg, PaymentDetails, PaymentChargeDetails, PaymentIntentDetails
+from core.models import UserFiles, User, ProcessQueue, AudioQueue, UserVoiceCloneQueue, WxPublicMsg, PaymentDetails, PaymentChargeDetails, PaymentIntentDetails
 import subprocess
 import platform
 import json
@@ -1376,6 +1376,10 @@ def checkout_webhook():
                 payment_charge_details.amount_authorized = payload['payment_method_details']['card']['amount_authorized']
                 payment_charge_details.amount_captured = payload['amount_captured']
                 payment_charge_details.receipt_url = payload['receipt_url']
+
+        else:
+            print("Unhandled event: " + event.type)
+            return
 
         db.session.add(new_webhook)
 
