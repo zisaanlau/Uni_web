@@ -1306,7 +1306,7 @@ def checkout_webhook():
         if event.type == 'payment_intent.created':
             payment_intent_details = PaymentIntentDetails.query.filter_by(external_id = payload['id']).first()
             if payment_intent_details is None:
-                new_payment_intent = create_payment_intent(event)
+                new_payment_intent = create_payment_intent(payload)
                 db.session.add(new_payment_intent)
 
         elif event.type == 'payment_intent.succeeded':
